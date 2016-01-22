@@ -1,0 +1,18 @@
+<div style="clear:both"></div>
+</table>
+<table {list-legend} border="0" width="100%" cellpading="0" cellspacing="5">
+  <tr>
+    <td class="ad-list-active"></td>
+	<td>{ad-list-active}</td>
+  </tr>
+  <tr>
+    <td class="ad-list-old"></td>
+	<td>{ad-list-old}</td>
+  </tr>  
+  <tr>
+    <td class="ad-list-deleted"></td>
+	<td>{ad-list-delete}</td>
+  </tr>
+</table>
+<p><div style="align: center">{pagination}</div></p>
+</div>

@@ -1,0 +1,9 @@
+<div class="user_menu">
+ <a href="{site_url}/index.php">{all_ads}</a> |
+ <a href="{site_url}/index.php?mode=o">{offer}</a> | 
+ <a href="{site_url}/index.php?mode=d">{demand}</a> | 
+ <a href="{site_url}/index.php?mode=e">{place_an_ad}</a> | 
+ <a href="{site_url}/index.php?mode=my">{my_ads}</a> |
+ <a href="{site_url}/index.php?mode=h">{help}</a>  
+ {admin}
+</div>

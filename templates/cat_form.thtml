@@ -1,0 +1,35 @@
+<form action="{site_admin_url}/plugins/classifieds/index.php?mode=cat&amp;op=save" method="POST" class="classifieds_form">
+{cid}
+    <fieldset style="margin-top: 10px;">
+	    <legend><b>{cat_informations}</b></legend>
+  	        <div> 
+    	        <p>
+				<label>{parent_category_label}</label>
+			    <select name="pid">
+			        {categories}
+			    </select> 
+				</p>
+	        </div>
+	        <div>
+    	        <p><label>{category_label}<font color="red"> *</font></label>
+			    <input type="text" name="category" value="{category}" size="80" maxlength="255" {xhtml}></p>
+	        </div>
+	        <div>
+	            <p><label>{catorder_label}</label>
+                <input type="text" name="catorder" value="{catorder}" size="5" maxlength="5" {xhtml}></p>
+				{categories_order}
+	        </div>
+	        <div>
+	            <p><label>{catdeleted_label}</label> 
+			    <select name="catdeleted">
+                <option value="0"{select_enable}>{enable}</option>
+                <option value="1"{select_disable}>{disable}</option>
+	            </select></p>
+		    </div>
+    </fieldset>
+	
+    <p><strong><font color="red">*</font><em> {required_field}</em></strong></p>
+	{admin_options}
+    <input type="submit" name="submit" value="{validate_button}" {xhtml}>
+
+</form>
