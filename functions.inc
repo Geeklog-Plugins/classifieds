@@ -458,7 +458,7 @@ function plugin_chkVersion_classifieds()
 */
 function plugin_upgrade_classifieds()
 {
-    global $_CONF, $_TABLES, $_DB_table_prefix;
+    global $_CONF, $_CLASSIFIEDS_CONF, $_TABLES, $_DB_table_prefix;
 
     $installed_version = DB_getItem($_TABLES['plugins'], 'pi_version',
                                     "pi_name = 'classifieds'");
@@ -626,7 +626,24 @@ function plugin_upgrade_classifieds()
 
             DB_query("UPDATE {$_TABLES['plugins']} SET pi_version = '$code_version', pi_gl_version = '$pi_gl_version' WHERE pi_name = 'classifieds'");
 			COM_errorLog( "Updated classifieds plugin from v$installed_version to v$code_version", 1 );
-			/* This code is for statistics ONLY */
+			
+            //move public_html/classifieds to custom folder if needed
+            if ($_CLASSIFIEDS_CONF['classifieds_folder'] != 'classifieds' && $_CLASSIFIEDS_CONF['classifieds_folder'] != '') {
+                if ( rename($_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder'],$_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder'].'_old') ) {
+                   COM_errorLog("CLASSIFIEDS - Renamed {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
+                } else {
+                  COM_errorLog("CLASSIFIEDS - Can't rename {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
+                }
+                sleep (5);
+                if( rename($_CONF['path_html'] . 'classifieds',$_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder']) ) {
+                   COM_errorLog("CLASSIFIEDS - Moved classifieds files to {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
+                } else {
+                  COM_errorLog("CLASSIFIEDS - Can't move classifieds files to {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
+                }
+                CLASSIFIEDS_delTree($_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder'].'_old');
+            }
+            
+            /* This code is for statistics ONLY */
             $message =  'Completed classifieds plugin upgrade: ' . date('m d Y',time()) . "   AT " . date('H:i', time()) . "\n";
             $message .= 'Site: ' . $_CONF['site_url'] . ' and Sitename: ' . $_CONF['site_name'] . "\n";
 			if (function_exists('CLASSIFIEDS_adCopy')) $message .= 'Proversion' . "\n";
@@ -634,6 +651,14 @@ function plugin_upgrade_classifieds()
 	}
     return true;
 }
+
+function CLASSIFIEDS_delTree($dir) {
+   $files = array_diff(scandir($dir), array('.','..'));
+    foreach ($files as $file) {
+      (is_dir("$dir/$file") && !is_link($dir)) ? CLASSIFIEDS_delTree("$dir/$file") : unlink("$dir/$file");
+    }
+    return rmdir($dir);
+} 
 
 /**
 * Automatic uninstall function for plugins

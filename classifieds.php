@@ -38,7 +38,7 @@ $_TABLES['cl_users'] = $_DB_table_prefix . 'cl_users';
 /**
 * Classifieds Configuration.
  */
-$_CLASSIFIEDS_CONF['path_html']  = $_CONF['path_html'] . $_CLASSIFIEDS_CONF['paypal_folder'] . '/';
+$_CLASSIFIEDS_CONF['path_html']  = $_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder'] . '/';
 $_CLASSIFIEDS_CONF['site_url']   = $_CONF['site_url'] . '/' . $_CLASSIFIEDS_CONF['classifieds_folder'];
 $_CLASSIFIEDS_CONF['debug'] = false;
 $_CLASSIFIEDS_CONF['path_images']  = $_CONF['path_images'] . 'classifieds/';
