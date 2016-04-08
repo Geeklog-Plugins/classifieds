@@ -14,5 +14,5 @@
 	<td>{ad-list-delete}</td>
   </tr>
 </table>
-<p><div style="align: center">{pagination}</div></p>
+<p style="align: center;">{pagination}</p>
 </div>

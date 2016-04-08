@@ -110,6 +110,7 @@ $LANG_CLASSIFIEDS_1 = array(
 	'ads_not_available'       => 'Cette annonce n\'est plus disponible.',
 	'relay'                   => 'Relayer cette annonce',
 	'all_ads'                 => 'Toutes les annonces',
+    'profile_no_ad'           => 'Aucune petite-annonce en cours',
 
 );
 

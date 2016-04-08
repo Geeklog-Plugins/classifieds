@@ -110,6 +110,7 @@ $LANG_CLASSIFIEDS_1 = array(
 	'ads_not_available'       => 'This ads is not available',
 	'relay'                   => 'Relay ad',
 	'all_ads'                 => 'All ads',
+    'profile_no_ad'           => 'No active ads',
 );
 
 //Ad form create, edit ,delete

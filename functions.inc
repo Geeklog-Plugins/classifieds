@@ -630,15 +630,18 @@ function plugin_upgrade_classifieds()
             //move public_html/classifieds to custom folder if needed
             if ($_CLASSIFIEDS_CONF['classifieds_folder'] != 'classifieds' && $_CLASSIFIEDS_CONF['classifieds_folder'] != '') {
                 if ( rename($_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder'],$_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder'].'_old') ) {
-                   COM_errorLog("CLASSIFIEDS - Renamed {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
+                     COM_errorLog("CLASSIFIEDS - Renamed {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
                 } else {
-                  COM_errorLog("CLASSIFIEDS - Can't rename {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
+                    COM_errorLog("CLASSIFIEDS - Can't rename {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
                 }
                 sleep (5);
                 if( rename($_CONF['path_html'] . 'classifieds',$_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder']) ) {
-                   COM_errorLog("CLASSIFIEDS - Moved classifieds files to {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
+                     COM_errorLog("CLASSIFIEDS - Moved classifieds files to {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
                 } else {
-                  COM_errorLog("CLASSIFIEDS - Can't move classifieds files to {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
+                    COM_errorLog("CLASSIFIEDS - Can't move classifieds files to {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
+				    // For ftp update
+				    rename($_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder'].'_old',$_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder']);
+					COM_errorLog("CLASSIFIEDS - Check your {$_CLASSIFIEDS_CONF['classifieds_folder']} folder." );
                 }
                 CLASSIFIEDS_delTree($_CONF['path_html'] . $_CLASSIFIEDS_CONF['classifieds_folder'].'_old');
             }
@@ -696,9 +699,13 @@ function plugin_autouninstall_classifieds()
 */
 function plugin_profileblocksdisplay_classifieds ($uid)
 {
-    global $_TABLES;
+    global $_TABLES, $LANG_CLASSIFIEDS_1;
+    
+    $retval .= COM_startBlock($LANG_CLASSIFIEDS_1['plugin_name']);
+    $retval .= CLASSIFIEDS_displayAds($uid,0,'','',1);
+    $retval .= COM_endBlock();
 	
-	return CLASSIFIEDS_displayAds($uid,0,'','',1);
+	return $retval;
 }
 
 /**
@@ -870,8 +877,6 @@ function CLASSIFIEDS_displayAds ($user = 1, $my = 0, $username='', $view_cat='',
 
 	//if any message
 	if ($profile !=1) $retval .= CLASSIFIEDS_message($_GET['msg']);
-
-	$retval .= COM_startBlock();
 	
     if ( ($user > 1) && ($my == 0) && ($profile == 0) ) {
 		    $retval = COM_startBlock($LANG_CLASSIFIEDS_1['all_ads_from'] . ' <a href="'. $_CLASSIFIEDS_CONF['site_url'] .
@@ -922,11 +927,6 @@ function CLASSIFIEDS_displayAds ($user = 1, $my = 0, $username='', $view_cat='',
 						</form>
 					 </div>';
 		$ad->set_var('search_box', $search_box);
-	} else if ($profile == 1 && $limit== '' ) {
-	    $ad->set_var('search_box', '<h2>' . $LANG_CLASSIFIEDS_1['user_ads'] . '</h2>');
-		if (DB_numRows($ad_res) < 1) {
-		    $ad->set_var('search_box', '');
-		}
 	} else {
 	    $ad->set_var('search_box', '');
 	}
@@ -934,10 +934,14 @@ function CLASSIFIEDS_displayAds ($user = 1, $my = 0, $username='', $view_cat='',
     $retval .= $ad->parse('', 'start');
 	
 	//No ad
-	if ( (DB_numRows($ad_res) < 1) && $profile == 0) {
-        $retval .= COM_startBlock($LANG_CLASSIFIEDS_1['no_ad']);
-        $retval .= $LANG_CLASSIFIEDS_1['no_ad_message'];
-        $retval .= COM_endBlock();
+	if ( DB_numRows($ad_res) < 1 ) {
+        if ( $profile == 0 ) {
+            $retval .= COM_startBlock($LANG_CLASSIFIEDS_1['no_ad']);
+            $retval .= $LANG_CLASSIFIEDS_1['no_ad_message'];
+            $retval .= COM_endBlock();
+        } else {
+           return $LANG_CLASSIFIEDS_1['profile_no_ad'];
+        }
     }
 	//legend
 	if ( $my == 1 ) {
@@ -1047,8 +1051,6 @@ function CLASSIFIEDS_displayAds ($user = 1, $my = 0, $username='', $view_cat='',
     }
 
     $retval .= $ad->parse('', 'end');
-
-    $retval .= COM_endBlock();
 
     return $retval;
 }
