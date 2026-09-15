@@ -2,5 +2,8 @@
   "schema": 1,
   "id": "classifieds",
   "name": "Classifieds",
-  "icon": "admin/images/classifieds.png"
+  "icon": "admin/images/classifieds.png",
+  "requires": {
+    "geeklog": "1.8.0"
+  }
 }
